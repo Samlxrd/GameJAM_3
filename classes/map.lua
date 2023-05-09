@@ -10,7 +10,8 @@ function Map:new()
     self.blocos[1] = love.graphics.newImage("img/textures/grass.png")
     self.blocos[2] = love.graphics.newImage("img/textures/stone.png")
     self.blocos[3] = love.graphics.newImage("img/textures/sand.png")
-    self.blocos[4] = love.graphics.newImage("img/textures/lava.png")
+    self.blocos[4] = love.graphics.newImage("img/textures/sand.png")
+    self.blocos[5] = love.graphics.newImage("img/textures/lava.png")
 
     self.area = {}
 
@@ -24,13 +25,22 @@ function Map:new()
                 self.area[i][j] = 1
             end
 
-            if (i == 23 or i == 24) and (j > 1 and j < 19) or
-            (j == 18 or j == 17) and (i > 1 and i < 24) or
-            (i == 2 or i == 3) and (j > 4 and j < 18) or
-            (j == 5 or j == 6) and (i > 1 and i < 21) or
-            (i == 19 or i == 20) and (j > 4 and j < 13) or
-            (j == 11 or j == 12) and (i > 6 and i < 20) then
+            if i == 23 and (j > 1 and j < 18) or
+            j == 17 and (i > 2 and i < 24) or
+            i == 3  and (j > 5 and j < 18) or
+            j == 6  and (i > 2 and i < 20) or
+            i == 19  and (j > 5 and j < 12) or
+            j == 11 and (i > 6 and i < 19) then
                 self.area[i][j] = 3
+            end
+
+            if i == 24 and (j > 1 and j < 19) or
+            j == 18 and (i > 1 and i < 25) or
+            i == 2  and (j > 4 and j < 18) or
+            j == 5  and (i > 2 and i < 21) or
+            i == 20  and (j > 5 and j < 13) or
+            j == 12 and (i > 6 and i < 20) then
+                self.area[i][j] = 4
             end
         end
     end

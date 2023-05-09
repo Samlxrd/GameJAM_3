@@ -11,8 +11,7 @@ function Jogo:new()
     display = Display()
 
     state = 0
-    requestPathL()
-    requestPathR()
+    requestPathEnemy()
 end
 
 function Jogo:update(dt)
@@ -37,6 +36,7 @@ function Jogo:update(dt)
         horde:update(dt)
         p1:update(dt)
     end
+    display:update(dt)
 end
 end
 
@@ -45,22 +45,6 @@ function Jogo:draw()
     p1:draw()
     horde:draw()
     display:draw()
-
-    if state == 0 then
-        love.graphics.setFont(font)
-        text = "Pressione <space> para iniciar o jogo"
-        local x,y = love.graphics.getDimensions()
-        local fx, fy = font.getWidth(font, text)/2, font.getHeight(font)/2
-        love.graphics.print(text, x/2 - fx, y/2 - fy, 0, 1,1,0)
-    end
-
-    if pauseTime < 15 then
-        t = string.format("%.2f", pauseTime)
-        text = "Intervalo: "..t
-        local x,y = love.graphics.getDimensions()
-        local fx, fy = font.getWidth(font, text)/2, font.getHeight(font)/2
-        love.graphics.print(text, x/2 - fx, y/2 - fy, 0, 1,1,0)
-    end
 end
 
 function positionIsOpenFunc(x, y)
@@ -69,8 +53,13 @@ function positionIsOpenFunc(x, y)
     end
 end
 
-function positionIsOpenFuncEnemy(x, y)
+function positionIsOpenFunc1(x, y)
     if map.area[x][y] == 3 then
+        return true
+    end
+end
+function positionIsOpenFunc2(x, y)
+    if map.area[x][y] == 4 then
         return true
     end
 end
@@ -79,11 +68,7 @@ function requestPath ()
     path = LuaStar:find(map.width, map.height, start, goal, positionIsOpenFunc, false, true)
 end
 
-function requestPathL ()
-    pathL = LuaStar:find(map.width, map.height, {x = 23, y = 2}, { x = 7, y = 11}, positionIsOpenFuncEnemy, false, true)
+function requestPathEnemy()
+    pathL = LuaStar:find(map.width, map.height, {x = 23, y = 2}, { x = 7, y = 11}, positionIsOpenFunc1, false, true)
+    pathR = LuaStar:find(map.width, map.height, {x = 24, y = 2}, { x = 7, y = 12}, positionIsOpenFunc2, false, true)
 end
-
-function requestPathR ()
-    pathR = LuaStar:find(map.width, map.height, {x = 24, y = 2}, { x = 7, y = 12}, positionIsOpenFuncEnemy, false, true)
-end
-
