@@ -3,7 +3,7 @@ Display = Classe:extend()
 function Display:new()
     score = 0
     diamonds = 0
-    hp = 100
+    hp = 1000
 end
 
 function Display:update(dt)
@@ -17,6 +17,7 @@ function Display:draw()
 
     -- Inicio do jogo
     if state == 0 then
+        font = love.graphics.newFont("fonts/mine.ttf", 16)
         love.graphics.setFont(font)
         text = "Pressione <space> para iniciar o jogo"
         local x,y = love.graphics.getDimensions()
@@ -35,7 +36,7 @@ function Display:draw()
 
     -- Display do HP e Diamonds (dinheiro)
     love.graphics.setFont(font)
-    text = "HP: "..tostring(hp).."                    Diamonds: "..diamonds
+    text = "Horda atual: "..horde.current_horde.."\tVida: "..tostring(hp).."\tDiamantes: "..diamonds
     local x = love.graphics.getWidth()
     local fx = font.getWidth(font, text)/2
     love.graphics.print(text, x/2 - fx, 10, 0, 1,1,0)

@@ -5,7 +5,7 @@ function Enemies:new(n, i)
     self.monsters = 0
     self.enemieslist = {}
     self.pop = n
-    self.interval = 1
+    self.interval = i
 end
 
 function Enemies:update(dt)
@@ -13,10 +13,10 @@ function Enemies:update(dt)
     -- Intervalo de spawn dos monstros
     if counter > self.interval then
         if self.monsters < self.pop then
-            table.insert(self.enemieslist, newEnemy(love.math.random(1,3)))
-            self.monsters = self.monsters + 1
+            table.insert(self.enemieslist, enemies:newEnemy())
+            print(self.pop.."/"..self.monsters.." - "..#self.enemieslist)
         end
-    counter = 0
+        counter = 0
     end
 
     -- Controle do movimento dos monstros
@@ -29,7 +29,7 @@ function Enemies:update(dt)
                 else
                     local pathL_vet = Vetor(pathL[e.pos_path+1].x, pathL[e.pos_path+1].y)
                     e.direction = pathL_vet - e.pos
-                    e.pos = e.pos + e.direction:norm()*dt * e.speed
+                    e.pos = e.pos + (e.direction:norm()*dt * e.speed * e.acceleration)/3
 
                     if e.pos:dist(pathL_vet) < 2/32 then
                         e.pos = pathL_vet
@@ -46,7 +46,7 @@ function Enemies:update(dt)
                 else
                     local pathR_vet = Vetor(pathR[e.pos_path+1].x, pathR[e.pos_path+1].y)
                     e.direction = pathR_vet - e.pos
-                    e.pos = e.pos + e.direction:norm()*dt * e.speed
+                    e.pos = e.pos + (e.direction:norm()*dt * e.speed * e.acceleration)/3
 
                     if e.pos:dist(pathR_vet) < 2/32 then
                         e.pos = pathR_vet
@@ -56,7 +56,6 @@ function Enemies:update(dt)
             end
         end
     end
-    --print(self.monsters.."/"..self.pop.. "   "..#self.enemieslist)
 end
 
 function Enemies:draw()
@@ -77,16 +76,20 @@ function Enemies:draw()
     end
 end
 
-function newEnemy(type)
+function Enemies:newEnemy()
+    local tipo = self:calculaPorcentagem(horde.current_horde)
+
+
     e = {}
     e.pos_path = 1
     e.direction = Vetor()
     e.dir = 1
-    e.types = {"img/mobs/zombie.png", "img/mobs/skeleton.png", "img/mobs/creeper.png"}
-    e.speeds = {4, 6, 3}
+    e.types = {"img/entities/zombie.png", "img/entities/skeleton.png", "img/entities/creeper.png"}
+    e.speeds = {10, 15, 5}
     e.lifes = {20, 10, 80}
-    e.life = e.lifes[type]
-    e.speed = e.speeds[type]
+    e.life = e.lifes[tipo]
+    e.speed = e.speeds[tipo] + horde.current_horde
+    e.acceleration = 1
 
     e.pos = Vetor(love.math.random(23,24),2)
     if e.pos.x == 23 then
@@ -95,7 +98,7 @@ function newEnemy(type)
         e.P = 2
     end
 
-    e.img = love.graphics.newImage(e.types[type])
+    e.img = love.graphics.newImage(e.types[tipo])
     local wd = e.img:getWidth()
     e.anim = {}
     e.anim.down = love.graphics.newQuad(0,0, 32, 32, wd, 32)
@@ -103,5 +106,40 @@ function newEnemy(type)
     e.anim.up = love.graphics.newQuad(64,0, 32, 32, wd, 32)
     e.anim.left = love.graphics.newQuad(96,0, 32, 32, wd, 32)
 
+    self.monsters = self.monsters + 1
     return e
+end
+
+function Enemies:calculaPorcentagem(horda)
+    local t
+    -- 50/50
+    if horda == 1 then
+        t = love.math.random(1,2)
+    -- 45/45/10
+
+    else if horda == 2 then
+        t = love.math.random(1,100)
+        if t > 0 and t < 46 then
+            t = 1
+        else if t > 45 and t < 91 then
+            t = 2
+        else
+            t = 3
+        end
+        end
+
+    else
+        t = love.math.random(1,100)
+        if t > 0 and t < 41 then
+            t = 1
+        else if t > 40 and t < 81 then
+            t = 2
+        else
+            t = 3
+        end
+        end
+    end
+    end
+
+    return t
 end

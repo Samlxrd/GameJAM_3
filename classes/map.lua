@@ -2,6 +2,10 @@ Map = Classe:extend()
 
 function Map:new()
     self.hover_color = { 1, 1, 1, 0.5 }
+    self.spawn_time = 3
+    self.spawn_counter = 0
+    self.spawned = 0
+    self.diamond = Vetor(1,1)
 
     self.width = math.floor(800/32)
     self.height = math.floor(608/32)
@@ -11,7 +15,7 @@ function Map:new()
     self.blocos[2] = love.graphics.newImage("img/textures/stone.png")
     self.blocos[3] = love.graphics.newImage("img/textures/sand.png")
     self.blocos[4] = love.graphics.newImage("img/textures/sand.png")
-    self.blocos[5] = love.graphics.newImage("img/textures/lava.png")
+    self.blocos[5] = love.graphics.newImage("img/textures/diamond.png")
 
     self.area = {}
 
@@ -48,10 +52,34 @@ function Map:new()
 end
 
 function Map:update(dt)
-    if self.area[mouse.x][mouse.y] < 2 then
-        self.hover_color = {0, 1, 0, 0.5}
-    else
-        self.hover_color = {1, 0, 0, 0.5}
+    if state == 1 then
+        if self.area[mouse.x][mouse.y] < 2 then
+            self.hover_color = {1, 1, 1, 0.5}
+        else
+            self.hover_color = {1, 0, 0, 0.5}
+        end
+    end
+
+    if state == 2 then
+        if self.area[mouse.x][mouse.y] == 3 or self.area[mouse.x][mouse.y] == 4 then
+            self.hover_color = {0, 1, 0, 0.5}
+        else
+            self.hover_color = {1, 0, 0, 0.5}
+        end
+    end
+
+    self.spawn_counter = self.spawn_counter + dt
+
+    if self.spawn_counter >= self.spawn_time and self.spawned == 0 then
+        self.diamond = Vetor(1,1)
+        -- Vai sortear um x,y para nascer o diamante, até ser um lugar válido
+        while self.area[self.diamond.x][self.diamond.y] ~= 1 do
+            self.diamond = Vetor(love.math.random(2,22), love.math.random(2,16))
+            print(self.diamond.x,self.diamond.y)
+        end
+
+        self.spawned = 1
+        self.spawn_counter = 0
     end
 end
 
@@ -60,6 +88,10 @@ function Map:draw()
         for j=1, self.height do
            love.graphics.draw(self.blocos[self.area[i][j]], tile(i-1), tile(j-1))
         end
+    end
+
+    if self.spawned == 1 then
+        love.graphics.draw(self.blocos[5], tile(self.diamond.x-1), tile(self.diamond.y-1))
     end
 
     love.graphics.setColor(self.hover_color)
