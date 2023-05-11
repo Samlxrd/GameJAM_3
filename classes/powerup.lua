@@ -30,6 +30,7 @@ function Powerup:update(dt)
     -- Ativação do powerup
     if state == 2 then
 
+        -- Posicionar powerup
         if love.mouse.isDown(1) and (map.area[mouse.x][mouse.y] == 3 or map.area[mouse.x][mouse.y] == 4) then
             table.insert(self.poweruplist, self:newPowerup(self.type, mouse))
             state = 1
@@ -48,7 +49,8 @@ function Powerup:update(dt)
             table.remove(self.poweruplist, i)
         end
     end
-
+    print(dt)
+    self:checkCollision(dt)
 end
 
 function Powerup:draw()
@@ -67,7 +69,7 @@ function Powerup:newPowerup(type, pos)
 
     p.texture = {}
     p.texture[1] = love.graphics.newImage("img/textures/lava.png")
-    --p.texture[2] = love.graphics.newImage("img/textures/ice.png")
+    p.texture[2] = love.graphics.newImage("img/textures/ice.png")
     --p.texture[3] = love.graphics.newImage("img/textures/cactus.png")
 
     p.duration = {10, 15, 60}
@@ -75,4 +77,53 @@ function Powerup:newPowerup(type, pos)
 
     diamonds = diamonds - self.costs[p.type]
     return p
+end
+
+function Powerup:checkCollision(dt)
+    if #self.poweruplist > 0 and #enemies.enemieslist > 0 then
+        for i, p in ipairs(self.poweruplist) do
+            for j, e in ipairs(enemies.enemieslist) do
+                if self:isColliding(tile(e.pos), tile(p.pos)) then
+                    -- Lava
+                    if p.type == 1 then
+
+                        e.life = e.life - dt * 80
+                        if e.life <= 0 then
+                            table.remove(enemies.enemieslist, j)
+                        end
+                    
+                    -- Gelo
+                    else if p.type == 2 then
+                        e.freezed = 1
+                        e.freeze_time = 3.9
+                        e.acceleration = 0.2
+
+                    --[[ else if p.type == 3 then
+                        
+                    end ]]
+                    end
+                    end
+                else
+                    if e.freeze_time < 4 and e.freezed == 1 then
+                        e.freeze_time = e.freeze_time - dt
+                    end
+
+                    if e.freeze_time <= 0 then
+                        e.acceleration = 1
+                        e.freeze_time = 3
+                        e.freezed = 0
+                    end
+                end
+
+            end
+        end
+    end
+
+end
+
+function Powerup:isColliding(A,B)
+    if A.x < B.x + 32 and A.x + 32 > B.x and
+    A.y < B.y + 32 and A.y + 32 > B.y then
+        return true
+    end
 end

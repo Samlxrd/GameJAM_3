@@ -90,6 +90,8 @@ function Enemies:newEnemy()
     e.life = e.lifes[tipo]
     e.speed = e.speeds[tipo] + horde.current_horde
     e.acceleration = 1
+    e.freeze_time = 4
+    e.freezed = 0
 
     e.pos = Vetor(love.math.random(23,24),2)
     if e.pos.x == 23 then

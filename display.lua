@@ -3,11 +3,11 @@ Display = Classe:extend()
 function Display:new()
     score = 0
     diamonds = 0
-    hp = 1000
+    hp = 100
 end
 
 function Display:update(dt)
-    if hp < 1 then
+    if hp <= 0 then
         hp = 0
         state = 3
     end
@@ -26,8 +26,8 @@ function Display:draw()
     end
 
     -- Intervalo entre hordas
-    if pauseTime < 15 then
-        t = string.format("%.2f", pauseTime)
+    if pauseTime < 13+2*horde.current_horde then
+        t = string.format("%.1f", pauseTime)
         text = "Intervalo: "..t
         local x,y = love.graphics.getDimensions()
         local fx, fy = font.getWidth(font, text)/2, font.getHeight(font)/2
@@ -36,8 +36,13 @@ function Display:draw()
 
     -- Display do HP e Diamonds (dinheiro)
     love.graphics.setFont(font)
-    text = "Horda atual: "..horde.current_horde.."\tVida: "..tostring(hp).."\tDiamantes: "..diamonds
+    text = "Horda atual: "..horde.current_horde.."\t\t\t\t\tVida: "..tostring(hp).."\t\t\t\t\tDiamantes: "..diamonds
     local x = love.graphics.getWidth()
     local fx = font.getWidth(font, text)/2
     love.graphics.print(text, x/2 - fx, 10, 0, 1,1,0)
+
+    -- Display instruções
+    text = "Powerups: \t\t\tQ = Lava (Dano)\t\t\t W = Gelo (Lentidao)"
+    fx = font.getWidth(font, text)/2
+    love.graphics.print(text, x/2 - fx, love.graphics.getHeight() - 20, 0, 1,1,0)
 end

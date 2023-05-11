@@ -12,19 +12,19 @@ function Horde:update(dt)
 
         counter = counter + dt
         -- Gera horda
-        if self.spawning == 0 and pauseTime == 15 then
+        if self.spawning == 0 and pauseTime >= (13+2*self.current_horde) then
             enemies = Enemies(self:newHorde())
             self.spawning = 1
         else
             -- Intervalo entre hordas
-            if enemies.monsters > 0 and #enemies.enemieslist == 0 then
+            if enemies.monsters == enemies.pop and #enemies.enemieslist == 0 then
 
                 pauseTime = pauseTime - dt
                 self.spawning = 0
 
                 if pauseTime <= 0 then
                     self.current_horde = self.current_horde + 1
-                    pauseTime = 15
+                    pauseTime = 13+2*self.current_horde
                 end
             end
             enemies:update(dt)

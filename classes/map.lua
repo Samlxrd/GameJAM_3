@@ -2,7 +2,7 @@ Map = Classe:extend()
 
 function Map:new()
     self.hover_color = { 1, 1, 1, 0.5 }
-    self.spawn_time = 3
+    self.spawn_time = 2.5
     self.spawn_counter = 0
     self.spawned = 0
     self.diamond = Vetor(1,1)
@@ -67,7 +67,8 @@ function Map:update(dt)
             self.hover_color = {1, 0, 0, 0.5}
         end
     end
-
+    
+    -- Intervalo de spawn dos diamantes
     self.spawn_counter = self.spawn_counter + dt
 
     if self.spawn_counter >= self.spawn_time and self.spawned == 0 then
