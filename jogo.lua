@@ -56,11 +56,16 @@ function Jogo:update(dt)
         map:update(dt)
         horde:update(dt)
         powerup:update(dt)
+
+    -- Fim de jogo
+    else if state == 3 then
+        if love.keyboard.isDown('space') then
+            state = 1
+       end
+    end
     end
 
     end
-
-    -- Colisão da horda com os powerups
 
     display:update(dt)
 end

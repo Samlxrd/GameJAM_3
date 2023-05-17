@@ -1,6 +1,6 @@
 Powerup = Classe:extend()
---312
-function Powerup:new(d)
+
+function Powerup:new()
     self.poweruplist = {}
     self.type = nil
     self.costs = {2, 2, 5}
@@ -18,12 +18,6 @@ function Powerup:update(dt)
     if love.keyboard.isDown('w') and diamonds >= self.costs[2] then
         state = 2
         self.type = 2
-    end
-
-    -- Seleção do powerup cacto
-    if love.keyboard.isDown('e') and diamonds >= self.costs[3] then
-        state = 2
-        self.type = 3
     end
 
 
@@ -49,13 +43,12 @@ function Powerup:update(dt)
             table.remove(self.poweruplist, i)
         end
     end
-    print(dt)
+
     self:checkCollision(dt)
 end
 
 function Powerup:draw()
     if #self.poweruplist > 0 then
-        print('entrou')
         for i, p in ipairs(self.poweruplist) do
             love.graphics.draw(p.texture[p.type], tile(p.pos.x-1), tile(p.pos.y-1))
         end
@@ -70,9 +63,8 @@ function Powerup:newPowerup(type, pos)
     p.texture = {}
     p.texture[1] = love.graphics.newImage("img/textures/lava.png")
     p.texture[2] = love.graphics.newImage("img/textures/ice.png")
-    --p.texture[3] = love.graphics.newImage("img/textures/cactus.png")
 
-    p.duration = {10, 15, 60}
+    p.duration = {10, 15}
     p.counter = p.duration[type]
 
     diamonds = diamonds - self.costs[p.type]
@@ -84,23 +76,20 @@ function Powerup:checkCollision(dt)
         for i, p in ipairs(self.poweruplist) do
             for j, e in ipairs(enemies.enemieslist) do
                 if self:isColliding(tile(e.pos), tile(p.pos)) then
-                    -- Lava
+
+                    -- Powerup Lava
                     if p.type == 1 then
 
                         e.life = e.life - dt * 80
                         if e.life <= 0 then
                             table.remove(enemies.enemieslist, j)
                         end
-                    
-                    -- Gelo
+
+                    -- Powerup Gelo
                     else if p.type == 2 then
                         e.freezed = 1
                         e.freeze_time = 3.9
                         e.acceleration = 0.2
-
-                    --[[ else if p.type == 3 then
-                        
-                    end ]]
                     end
                     end
                 else

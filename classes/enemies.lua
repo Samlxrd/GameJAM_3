@@ -14,7 +14,6 @@ function Enemies:update(dt)
     if counter > self.interval then
         if self.monsters < self.pop then
             table.insert(self.enemieslist, enemies:newEnemy())
-            print(self.pop.."/"..self.monsters.." - "..#self.enemieslist)
         end
         counter = 0
     end
@@ -25,7 +24,7 @@ function Enemies:update(dt)
             if pathL then
                 if #pathL == e.pos_path then
                     table.remove(self.enemieslist, i)
-                    hp = hp - e.life/5
+                    hp = hp - e.dmg
                 else
                     local pathL_vet = Vetor(pathL[e.pos_path+1].x, pathL[e.pos_path+1].y)
                     e.direction = pathL_vet - e.pos
@@ -42,7 +41,7 @@ function Enemies:update(dt)
             if pathR then
                 if #pathR == e.pos_path then
                     table.remove(self.enemieslist, i)
-                    hp = hp - e.life/5
+                    hp = hp - e.dmg
                 else
                     local pathR_vet = Vetor(pathR[e.pos_path+1].x, pathR[e.pos_path+1].y)
                     e.direction = pathR_vet - e.pos
@@ -79,7 +78,6 @@ end
 function Enemies:newEnemy()
     local tipo = self:calculaPorcentagem(horde.current_horde)
 
-
     e = {}
     e.pos_path = 1
     e.direction = Vetor()
@@ -87,12 +85,15 @@ function Enemies:newEnemy()
     e.types = {"img/entities/zombie.png", "img/entities/skeleton.png", "img/entities/creeper.png"}
     e.speeds = {10, 15, 5}
     e.lifes = {20, 10, 80}
-    e.life = e.lifes[tipo]
+    e.dmgs = {8, 10, 20}
     e.speed = e.speeds[tipo] + horde.current_horde
+    e.life = e.lifes[tipo]
+    e.dmg = e.dmgs[tipo]
     e.acceleration = 1
     e.freeze_time = 4
     e.freezed = 0
 
+    -- Spawna aleatoriamente no caminho da esquerda ou direita
     e.pos = Vetor(love.math.random(23,24),2)
     if e.pos.x == 23 then
         e.P = 1
@@ -114,12 +115,14 @@ end
 
 function Enemies:calculaPorcentagem(horda)
     local t
-    -- 50/50
-    if horda == 1 then
-        t = love.math.random(1,2)
-    -- 45/45/10
 
-    else if horda == 2 then
+    -- Zumbi/Esqueleto/Creeper
+
+    if horda == 1 then      -- 50/50
+        t = love.math.random(1,2)
+
+
+    else if horda == 2 then     -- 45/45/10
         t = love.math.random(1,100)
         if t > 0 and t < 46 then
             t = 1
@@ -130,7 +133,7 @@ function Enemies:calculaPorcentagem(horda)
         end
         end
 
-    else
+    else        -- 40, 40, 20
         t = love.math.random(1,100)
         if t > 0 and t < 41 then
             t = 1

@@ -19,7 +19,7 @@ end
 
 function Player:update(dt)
 
-    -- Movimentação do player por cliques
+    -- Movimentação do player por cliques, usando A*
     if love.mouse.isDown(1) then
         path = nil
         self.pos_path = 1
@@ -28,7 +28,7 @@ function Player:update(dt)
         requestPath()
     end
 
-    -- Path finding
+    -- Path finding (A*)
     if path then
 
         -- Chegou ao destino, reseta o path
@@ -55,6 +55,7 @@ function Player:update(dt)
     end
 end
 
+-- Carrega o frame de movimento de acordo com a direção do player
 function Player:draw()
     if self.direction.x == 0 and self.direction.y < 0 then
         love.graphics.draw(self.img, self.anim.up, tile(self.pos.x-1), tile(self.pos.y-1))

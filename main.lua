@@ -2,7 +2,6 @@ function love.load()
     Classe = require "libraries/classic"
     Vetor = require "libraries/vector"
     LuaStar = require "libraries/lua-star"
-    anim8 = require "libraries/anim8" -- Tirar o anim8 caso não for usar
 
     require "classes/powerup"
     require "classes/enemies"

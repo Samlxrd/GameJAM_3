@@ -11,6 +11,7 @@ function Horde:update(dt)
     if state == 1 or state == 2 then
 
         counter = counter + dt
+
         -- Gera horda
         if self.spawning == 0 and pauseTime >= (13+2*self.current_horde) then
             enemies = Enemies(self:newHorde())

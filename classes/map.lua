@@ -19,6 +19,8 @@ function Map:new()
 
     self.area = {}
 
+
+    -- Construção do Mapa
     for i=1, self.width do
         self.area[i] = {}
         for j=1, self.height do
@@ -52,7 +54,7 @@ function Map:new()
 end
 
 function Map:update(dt)
-    if state == 1 then
+    if state == 1 then      -- Estado em jogo
         if self.area[mouse.x][mouse.y] < 2 then
             self.hover_color = {1, 1, 1, 0.5}
         else
@@ -60,16 +62,18 @@ function Map:update(dt)
         end
     end
 
-    if state == 2 then
+    if state == 2 then      -- Estado selecionando local para o powerup
         if self.area[mouse.x][mouse.y] == 3 or self.area[mouse.x][mouse.y] == 4 then
             self.hover_color = {0, 1, 0, 0.5}
         else
             self.hover_color = {1, 0, 0, 0.5}
         end
     end
-    
+
     -- Intervalo de spawn dos diamantes
-    self.spawn_counter = self.spawn_counter + dt
+    if self.spawned == 0 then
+        self.spawn_counter = self.spawn_counter + dt
+    end
 
     if self.spawn_counter >= self.spawn_time and self.spawned == 0 then
         self.diamond = Vetor(1,1)
