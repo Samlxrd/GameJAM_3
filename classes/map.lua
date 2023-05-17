@@ -80,7 +80,6 @@ function Map:update(dt)
         -- Vai sortear um x,y para nascer o diamante, até ser um lugar válido
         while self.area[self.diamond.x][self.diamond.y] ~= 1 do
             self.diamond = Vetor(love.math.random(2,22), love.math.random(2,16))
-            print(self.diamond.x,self.diamond.y)
         end
 
         self.spawned = 1

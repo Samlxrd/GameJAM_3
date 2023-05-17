@@ -3,7 +3,7 @@ Display = Classe:extend()
 function Display:new()
     score = 0
     diamonds = 0
-    hp = 0
+    hp = 100
 end
 
 function Display:update(dt)

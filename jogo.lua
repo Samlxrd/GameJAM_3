@@ -60,6 +60,8 @@ function Jogo:update(dt)
     -- Fim de jogo
     else if state == 3 then
         if love.keyboard.isDown('space') then
+            hp = 100
+            jogo:new()
             state = 1
        end
     end
